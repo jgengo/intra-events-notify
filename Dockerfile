@@ -1,13 +1,22 @@
-FROM python:3.12-slim
+FROM python:3.12-alpine
 
 WORKDIR /app
+
+RUN apk add --no-cache wget
 
 RUN pip install uv
 
 COPY pyproject.toml uv.lock ./
 RUN uv sync --frozen
 
+RUN adduser -D -s /bin/sh app
+RUN chown -R app:app /app
+
 COPY . .
+RUN chown -R app:app /app
+USER app
+
+RUN uv sync --frozen
 
 EXPOSE 8000
 
