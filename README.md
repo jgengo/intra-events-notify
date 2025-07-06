@@ -17,6 +17,10 @@
 
 A FastAPI application that receives webhooks from the 42 intranet and publishes events to a Telegram group, keeping students updated about new events in real-time.
 
+<div align="center">
+ <img src='.github/docs/screenshot.png' alt="herbarium's logo" width="400px" /><br />
+</div><br />
+
 ## Purpose
 
 This application serves as a bridge between the 42 intranet system and Telegram, automatically notifying students about:
