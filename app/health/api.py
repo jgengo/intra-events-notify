@@ -3,7 +3,7 @@ from fastapi import APIRouter
 from app.health.api_formats import GetHealthResponse
 
 
-def create_health_router():
+def create_health_router() -> APIRouter:
     router = APIRouter()
 
     @router.get("/", response_model=GetHealthResponse, tags=["Health"])

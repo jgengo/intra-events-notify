@@ -50,9 +50,7 @@ class TelegramClient:
 
     async def send_message(self, text: str, parse_mode: Optional[str] = None) -> bool:
         try:
-            await self.bot.send_message(
-                chat_id=self.chat_id, text=text, parse_mode=parse_mode
-            )
+            await self.bot.send_message(chat_id=self.chat_id, text=text, parse_mode=parse_mode)
             logger.info(f"Message sent successfully to chat {self.chat_id}")
             return True
         except TelegramError as e:
@@ -62,9 +60,7 @@ class TelegramClient:
             logger.error(f"Unexpected error sending Telegram message: {e}")
             return False
 
-    async def send_messages(
-        self, messages: List[str], parse_mode: Optional[str] = None
-    ) -> int:
+    async def send_messages(self, messages: List[str], parse_mode: Optional[str] = None) -> int:
         if not messages:
             logger.warning("No messages provided to send")
             return 0
@@ -72,9 +68,7 @@ class TelegramClient:
         successful_sends = 0
         for i, message in enumerate(messages):
             try:
-                await self.bot.send_message(
-                    chat_id=self.chat_id, text=message, parse_mode=parse_mode
-                )
+                await self.bot.send_message(chat_id=self.chat_id, text=message, parse_mode=parse_mode)
                 successful_sends += 1
                 logger.info(f"Message {i+1}/{len(messages)} sent successfully")
 
@@ -84,20 +78,16 @@ class TelegramClient:
             except TelegramError as e:
                 logger.error(f"Failed to send message {i+1}/{len(messages)}: {e}")
             except Exception as e:
-                logger.error(
-                    f"Unexpected error sending message {i+1}/{len(messages)}: {e}"
-                )
+                logger.error(f"Unexpected error sending message {i+1}/{len(messages)}: {e}")
 
         logger.info(f"Sent {successful_sends}/{len(messages)} messages successfully")
         return successful_sends
 
     async def send_event_notification(self, event: EventRequestV1) -> bool:
-        message = f"<b>{event.name}</b>"
+        message = f"<b>{event.name}</b>\n_______________________"
 
         if event.begin_at and event.end_at:
-            message += (
-                f"\n\n📅    {self._format_event_dates(event.begin_at, event.end_at)}"
-            )
+            message += f"\n\n📅    {self._format_event_dates(event.begin_at, event.end_at)}"
 
         if event.location:
             message += f"\n📍    {event.location}"
@@ -106,12 +96,10 @@ class TelegramClient:
             message += f"\n👥    Max <b>{event.max_people} people</b>"
 
         if event.description:
-            escaped_description = event.description.replace("<", "&lt;").replace(
-                ">", "&gt;"
-            )
-            message += f"\n\n<code>{escaped_description}</code>"
+            escaped_description = event.description.replace("<", "&lt;").replace(">", "&gt;")
+            message += f"\n_______________________\n\n<code>{escaped_description}</code>"
 
-        message += f"\n\n&gt;&gt;&gt; <a href='https://profile.intra.42.fr/events/{event.id}'>Register</a> &lt;&lt;&lt;"
+        message += f"\n_______________________\n&gt;&gt;&gt; <a href='https://profile.intra.42.fr/events/{event.id}'>Register</a> &lt;&lt;&lt;"
 
         return await self.send_message(message, parse_mode="HTML")
 
@@ -127,7 +115,7 @@ class TelegramClient:
             logger.error(f"Unexpected error testing Telegram connection: {e}")
             return False
 
-    async def close(self):
+    async def close(self) -> None:
         try:
             await self.bot.close()
             logger.info("Telegram bot session closed")
@@ -135,7 +123,7 @@ class TelegramClient:
             logger.error(f"Error closing Telegram bot session: {e}")
 
 
-async def main(config: Config):
+async def main(config: Config) -> None:
     client = TelegramClient(config)
 
     try:

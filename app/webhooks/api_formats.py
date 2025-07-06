@@ -1,3 +1,5 @@
+from typing import Literal
+
 from pydantic import BaseModel
 
 
@@ -15,3 +17,8 @@ class EventRequestV1(BaseModel):
     cursus_ids: list[int]
     created_at: str
     updated_at: str
+
+
+class EventResponseV1(BaseModel):
+    status: Literal["success"] = "success"
+    message: Literal["Event processed successfully"] = "Event processed successfully"

@@ -6,16 +6,24 @@ from fastapi import APIRouter, HTTPException, Request
 
 from app.config import Config
 from app.services.telegram_client import TelegramClient
-from app.webhooks.api_formats import EventRequestV1
+from app.webhooks.api_formats import EventRequestV1, EventResponseV1
 
 logger = logging.getLogger(__name__)
 
 
-def create_webhook_router(config: Config, telegram_client: TelegramClient):
+def create_webhook_router(config: Config, telegram_client: TelegramClient) -> APIRouter:
     router = APIRouter()
 
-    @router.post("/webhooks/events", tags=["Webhooks"])
-    async def process_event(request: Request, event_data: EventRequestV1):
+    @router.post(
+        "/webhooks/events",
+        tags=["Webhooks"],
+        response_model=EventResponseV1,
+        responses={
+            HTTPStatus.UNAUTHORIZED: {"description": "Unauthorized"},
+            HTTPStatus.BAD_REQUEST: {"description": "Invalid webhook payload or unsupported event type"},
+        },
+    )
+    async def process_event(request: Request, event_data: EventRequestV1) -> EventResponseV1:
         try:
             secret = request.headers.get("X-Secret")
             model = request.headers.get("X-Model")
@@ -23,22 +31,22 @@ def create_webhook_router(config: Config, telegram_client: TelegramClient):
             delivery_id = request.headers.get("X-Delivery")
 
             if not secret or secret != config.webhook_secret:
-                return HTTPException(status_code=HTTPStatus.UNAUTHORIZED)
+                raise HTTPException(status_code=HTTPStatus.UNAUTHORIZED)
 
             if model != "event":
                 logger.info("Ignoring webhook for model: %s", model)
-                return {"status": "ignored", "message": f"Model {model} not supported"}
+                raise HTTPException(status_code=HTTPStatus.BAD_REQUEST)
 
             if event not in ["create"]:
                 logger.info("Ignoring webhook for event: %s", event)
-                return {"status": "ignored", "message": f"Event {event} not supported"}
+                raise HTTPException(status_code=HTTPStatus.BAD_REQUEST)
 
             logger.warning("Processing webhook - Delivery: %s, Model: %s, Event: %s", delivery_id, model, event)
             logger.warning("New webhook received: %s", event_data)
 
             await telegram_client.send_event_notification(event_data)
 
-            return {"status": "success", "message": "Event processed successfully"}
+            return EventResponseV1(status="success", message="Event processed successfully")
 
         except HTTPException:
             raise
