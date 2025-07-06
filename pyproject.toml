@@ -1,0 +1,33 @@
+[project]
+name = "intra-events-notify"
+version = "0.1.0"
+description = "Add your description here"
+readme = "README.md"
+requires-python = ">=3.12"
+dependencies = [
+    "fastapi>=0.115.14",
+    "pydantic>=2.11.7",
+    "python-telegram-bot>=22.2",
+    "sentry-sdk>=2.32.0",
+    "uvicorn>=0.35.0",
+]
+
+[project.optional-dependencies]
+dev = [
+    "mypy",
+    "ruff",
+    "black",
+    "isort",
+    "flake8",
+    "python-dotenv",
+]
+
+[tool.isort]
+profile = 'black'
+src_paths = ['app']
+line_length = 120
+
+[tool.black]
+line-length = 120
+target-version = ['py312']
+include = '\.pyi?$'
