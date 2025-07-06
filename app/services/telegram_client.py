@@ -96,17 +96,20 @@ class TelegramClient:
 
         if event.begin_at and event.end_at:
             message += (
-                f"\n\n📅 {self._format_event_dates(event.begin_at, event.end_at)}"
+                f"\n\n📅    {self._format_event_dates(event.begin_at, event.end_at)}"
             )
 
         if event.location:
-            message += f"\n📍 {event.location}"
+            message += f"\n📍    {event.location}"
 
         if event.max_people:
-            message += f"\n👥 {event.max_people} people"
+            message += f"\n👥    Max <b>{event.max_people} people</b>"
 
         if event.description:
-            message += f"\n\n<code>{event.description}</code>"
+            escaped_description = event.description.replace("<", "&lt;").replace(
+                ">", "&gt;"
+            )
+            message += f"\n\n<code>{escaped_description}</code>"
 
         message += f"\n\n&gt;&gt;&gt; <a href='https://profile.intra.42.fr/events/{event.id}'>Register</a> &lt;&lt;&lt;"
 
