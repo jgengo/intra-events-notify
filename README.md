@@ -11,7 +11,7 @@
 <br /><br />
 
 
-> [!IMPORTANT]<br> Webhook creation is restricted to 42 staff members *only*. This feature is designed for official campus communications.
+> [!IMPORTANT]<br> **Webhook creation is restricted to 42 staff members only. This feature is designed for official campus communications.**
 
 A FastAPI application that receives webhooks from the 42 intranet and publishes events to a Telegram group, keeping students updated about new events in real-time.
 
