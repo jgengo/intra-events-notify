@@ -1,10 +1,13 @@
 import asyncio
+import logging
 from http import HTTPStatus
 
 from fastapi import APIRouter, HTTPException
 
 from app.services.telegram_client import TelegramClient
 from app.webhooks.api_formats import EventRequestV1
+
+logger = logging.getLogger(__name__)
 
 
 def create_webhook_router(telegram_client: TelegramClient):
@@ -13,6 +16,7 @@ def create_webhook_router(telegram_client: TelegramClient):
     @router.post("/webhooks/events", tags=["Webhooks"])
     async def process_event(request: EventRequestV1):
         try:
+            logger.warn("new webhook received: %s", request)
             await telegram_client.send_event_notification(request)
             return {"status": "success", "message": "Event processed successfully"}
         except Exception as e:
