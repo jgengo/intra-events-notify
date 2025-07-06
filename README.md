@@ -1,29 +1,41 @@
-# Intra Events Telegram Notifier
+<div align="center">
+    <img src='.github/docs/logo.png' alt="bot's logo" /><br />
+    <h1 align="center">Intra Events Bot</h1>
+    <sub><em>Your friendly campus companion, buzzing with updates!</em></sub>
+</div>
 
-A FastAPI application that receives webhooks from your school's intranet website and publishes events to a Telegram group, keeping students updated about new events in real-time.
+<div align="center">
+  <sub>Created by <a href="https://github.com/jgengo">Jordane Gengo</a></sub>
+</div>
 
-## 🎯 Purpose
+<br /><br />
 
-This application serves as a bridge between your school's intranet system and Telegram, automatically notifying students about:
+🐝 **Intra Events Notifier**
+
+A FastAPI application that receives webhooks from the 42 intranet and publishes events to a Telegram group, keeping students updated about new events in real-time.
+
+## Purpose
+
+This application serves as a bridge between the 42 intranet system and Telegram, automatically notifying students about:
 - New events created
 - Event updates
 - Event cancellations
 - Location changes
 - Time modifications
 
-## 🏗️ Architecture
+## Architecture
 
 ```
 42 Intra → Webhook → FastAPI → Telegram Bot → Student Group
 ```
 
 The application consists of:
-- **Webhook endpoints**: Receive event notifications from 42 intranet
+- **Webhook endpoints**: Receive event notifications from the 42 intranet
 - **Telegram client**: Publish formatted messages to your Telegram group
 - **Health monitoring**: Ensure the service is running properly
 - **Error handling**: Graceful handling of webhook failures
 
-## 🚀 Quick Start
+## Quick Start
 
 ### Prerequisites
 
@@ -63,7 +75,7 @@ The application consists of:
 
 The API will be available at `http://localhost:8000`
 
-## 📋 API Endpoints
+## API Endpoints
 
 ### Health Check
 - `GET /health` - Check if the service is running
@@ -75,7 +87,7 @@ The API will be available at `http://localhost:8000`
 - `GET /docs` - Interactive API documentation (Swagger UI)
 - `GET /redoc` - Alternative API documentation
 
-## 🔧 Configuration
+## Configuration
 
 ### Environment Variables
 
@@ -92,9 +104,9 @@ The API will be available at `http://localhost:8000`
 2. **Add the bot to your group** and make it an admin
 3. **Get the group ID** by sending a message and checking `https://api.telegram.org/bot<BOT_TOKEN>/getUpdates`
 
-## 📝 Webhook Format
+## Webhook Format
 
-Your intranet should send POST requests to `/webhooks/events` with this format:
+The 42 intranet should send POST requests to `/webhooks/events` with this format:
 
 -- TODO
 
@@ -106,7 +118,7 @@ Your intranet should send POST requests to `/webhooks/events` with this format:
 - `deleted` - Event cancelled
 - `reminder` - Event reminder -->
 
-## 🛠️ Development
+## Development
 
 ### Code Quality
 
@@ -140,7 +152,7 @@ app/
     └── api_formats.py
 ```
 
-## 🚀 Deployment
+## Deployment
 
 ### Docker (Recommended)
 
@@ -160,23 +172,18 @@ CMD ["uv", "run", "uvicorn", "app.main:app", "--host", "0.0.0.0", "--port", "800
 ### Environment Setup
 
 1. Set up your environment variables
-2. Configure your webhook URL in your intranet system
+2. Configure your webhook URL in the 42 intranet
 3. Ensure your Telegram bot has proper permissions
 
-## 🔒 Security
+## Security
 
 - Webhook endpoints should be protected with authentication
 - Use HTTPS in production
 - Validate all incoming webhook data
 - Rate limit webhook endpoints to prevent abuse
 
-## 🐛 Troubleshooting
 
-### Common Issues
-
--- TODO 
-
-## 🤝 Contributing
+## Contributing
 
 1. Fork the repository
 2. Create a feature branch
@@ -184,6 +191,10 @@ CMD ["uv", "run", "uvicorn", "app.main:app", "--host", "0.0.0.0", "--port", "800
 4. Run tests and linting
 5. Submit a pull request
 
-## 📄 License
+## License
 
-[Your License Here]
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+
+## About
+
+Created by [Jordane Gengo](https://github.com/jgengo)
