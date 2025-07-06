@@ -8,19 +8,24 @@ from pydantic import ValidationError
 
 from app.config import Config
 from app.health.api import create_health_router
+from app.services.telegram_client import TelegramClient
+from app.webhooks.api import create_webhook_router
 
 
-async def create_routers() -> list[APIRouter]:
+async def create_routers(config: Config) -> list[APIRouter]:
+
+    telegram_client = TelegramClient(config=config)
 
     return [
         create_health_router(),
+        create_webhook_router(telegram_client),
     ]
 
 
 def create_api(config: Config, do_enable_lifespan: bool = True) -> FastAPI:
     @asynccontextmanager
     async def lifespan(_api: FastAPI) -> AsyncIterator[None]:
-        for router in await create_routers():
+        for router in await create_routers(config=config):
             api.include_router(router)
 
         yield
