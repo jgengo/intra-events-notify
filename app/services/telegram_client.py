@@ -30,7 +30,7 @@ class TelegramClient:
 
             duration = end_helsinki - begin_helsinki
 
-            date_str = begin_helsinki.strftime("%A, %B %d, %Y")
+            date_str = begin_helsinki.strftime("%A, %B %d")
             time_str = begin_helsinki.strftime("%H:%M")
 
             hours = int(duration.total_seconds() // 3600)
