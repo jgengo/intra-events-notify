@@ -1,0 +1,239 @@
+# Intra Events Telegram Notifier - Cursor Rules
+
+## Project Overview
+This is a FastAPI application that receives webhooks from a school intranet and publishes events to a Telegram group. The application serves as a bridge between the intranet system and Telegram notifications.
+
+## Code Style & Standards
+
+### Python Code Style
+- Use Python 3.12+ features and type hints
+- Follow PEP 8 with 120 character line length
+- Use async/await for all I/O operations
+- Use Pydantic models for data validation
+- Prefer composition over inheritance
+- Use dependency injection where appropriate
+
+### FastAPI Best Practices
+- Use APIRouter for organizing endpoints
+- Implement proper error handling with HTTPException
+- Use Pydantic models for request/response validation
+- Include proper API documentation with tags
+- Implement health check endpoints
+- Use proper status codes (200, 201, 400, 404, 500, etc.)
+
+### Project Structure
+```
+app/
+├── main.py              # FastAPI app entry point
+├── health/              # Health check endpoints
+│   ├── api.py          # Router creation
+│   └── api_formats.py  # Pydantic models
+├── services/            # Business logic
+│   └── telegram_client.py
+└── webhooks/           # Webhook endpoints
+    ├── api.py          # Router creation
+    └── api_formats.py  # Pydantic models
+```
+
+## Development Guidelines
+
+### Error Handling
+- Always handle exceptions gracefully
+- Log errors with appropriate context
+- Return meaningful error messages to clients
+- Use Sentry for error tracking in production
+
+### Security
+- Validate all incoming webhook data
+- Implement webhook authentication
+- Use environment variables for secrets
+- Sanitize user inputs
+- Implement rate limiting for webhooks
+
+### Telegram Integration
+- Handle Telegram API rate limits
+- Implement retry logic for failed messages
+- Format messages for readability
+- Include relevant event information
+- Handle different event types appropriately
+
+### Testing
+- Write unit tests for business logic
+- Test webhook endpoints with various payloads
+- Mock external dependencies (Telegram API)
+- Test error scenarios and edge cases
+
+## Code Quality Tools
+
+### Pre-commit Checks
+- Run `uv run black app/` for code formatting
+- Run `uv run isort app/` for import sorting
+- Run `uv run ruff check app/` for linting
+- Run `uv run mypy app/` for type checking
+
+### Dependencies
+- Use `uv` for dependency management
+- Keep dependencies up to date
+- Use specific version pins for production
+- Document any special dependency requirements
+
+## Environment & Configuration
+
+### Environment Variables
+Required:
+- `TELEGRAM_BOT_TOKEN`: Telegram bot token
+- `TELEGRAM_GROUP_ID`: Target group ID
+- `WEBHOOK_SECRET`: Secret for webhook auth
+
+Optional:
+- `SENTRY_DSN`: Error tracking
+- `LOG_LEVEL`: Logging verbosity
+
+### Configuration Management
+- Use Pydantic Settings for config validation
+- Provide sensible defaults where possible
+- Validate configuration on startup
+- Use environment-specific configs
+
+## API Design
+
+### Webhook Endpoints
+- Accept POST requests only
+- Validate webhook signatures
+- Return 200 OK for successful processing
+- Return 400 for invalid payloads
+- Return 401 for authentication failures
+
+### Response Formats
+- Use consistent JSON response structure
+- Include status and message fields
+- Provide detailed error information in development
+- Sanitize error messages in production
+
+## Logging & Monitoring
+
+### Logging
+- Use structured logging
+- Include request IDs for tracing
+- Log webhook processing events
+- Log Telegram message delivery status
+
+### Health Checks
+- Implement comprehensive health checks
+- Check Telegram API connectivity
+- Monitor webhook processing metrics
+- Alert on service degradation
+
+## Performance & Scalability
+
+### Optimization
+- Use async operations for I/O
+- Implement connection pooling for HTTP clients
+- Cache frequently accessed data
+- Optimize database queries (if applicable)
+
+### Scalability
+- Design for horizontal scaling
+- Use stateless application design
+- Implement proper resource cleanup
+- Monitor resource usage
+
+## Deployment & DevOps
+
+### Containerization
+- Use multi-stage Docker builds
+- Optimize image size
+- Include health checks in containers
+- Use non-root user in containers
+
+### CI/CD
+- Run tests on every commit
+- Check code quality in pipeline
+- Deploy to staging environment
+- Monitor deployment health
+
+## Documentation
+
+### Code Documentation
+- Document complex business logic
+- Include examples in docstrings
+- Document API endpoints thoroughly
+- Keep README up to date
+
+### API Documentation
+- Use OpenAPI/Swagger for API docs
+- Include request/response examples
+- Document error codes and messages
+- Provide integration guides
+
+## Security Considerations
+
+### Webhook Security
+- Validate webhook signatures
+- Implement replay attack protection
+- Rate limit webhook endpoints
+- Log webhook processing for audit
+
+### Data Protection
+- Don't log sensitive data
+- Encrypt secrets in transit and at rest
+- Implement proper access controls
+- Follow data retention policies
+
+## Maintenance
+
+### Code Maintenance
+- Keep dependencies updated
+- Refactor complex code
+- Remove unused code
+- Update documentation
+
+### Monitoring
+- Monitor application metrics
+- Set up alerting for failures
+- Track webhook processing times
+- Monitor Telegram API usage
+
+## Common Patterns
+
+### Webhook Processing
+```python
+@router.post("/webhooks/events")
+async def process_event(request: EventRequestV1):
+    try:
+        # Validate webhook signature
+        # Process event data
+        # Send to Telegram
+        # Return success response
+    except Exception as e:
+        # Log error
+        # Return appropriate error response
+```
+
+### Telegram Message Formatting
+```python
+async def send_event_notification(event: EventRequestV1):
+    message = f"""
+🎉 New Event: {event.title}
+
+📅 Date: {event.start_time}
+📍 Location: {event.location or 'TBD'}
+📝 Description: {event.description or 'No description provided'}
+
+#SchoolEvents
+    """
+    # Send to Telegram group
+```
+
+## Best Practices Summary
+
+1. **Always validate input data** - Use Pydantic models
+2. **Handle errors gracefully** - Don't let exceptions crash the app
+3. **Log important events** - For debugging and monitoring
+4. **Test thoroughly** - Unit tests and integration tests
+5. **Document everything** - Code, APIs, and processes
+6. **Monitor in production** - Health checks and metrics
+7. **Secure by default** - Validate, authenticate, authorize
+8. **Keep it simple** - Avoid over-engineering
+9. **Use async properly** - For all I/O operations
+10. **Follow FastAPI conventions** - Router patterns and response models 

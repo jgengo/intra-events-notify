@@ -22,8 +22,8 @@ class TelegramClient:
         try:
             helsinki_tz = timezone(timedelta(hours=2))
 
-            begin_dt = datetime.fromisoformat(begin_at.replace("Z", "+00:00"))
-            end_dt = datetime.fromisoformat(end_at.replace("Z", "+00:00"))
+            begin_dt = datetime.strptime(begin_at, "%Y-%m-%d %H:%M:%S UTC")
+            end_dt = datetime.strptime(end_at, "%Y-%m-%d %H:%M:%S UTC")
 
             begin_helsinki = begin_dt.astimezone(helsinki_tz)
             end_helsinki = end_dt.astimezone(helsinki_tz)
@@ -125,7 +125,6 @@ class TelegramClient:
             return False
 
     async def close(self):
-        """Close the bot session."""
         try:
             await self.bot.close()
             logger.info("Telegram bot session closed")
