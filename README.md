@@ -66,9 +66,20 @@ The application consists of:
    
    Edit `.env` with your configuration:
    ```env
+   # Environment
+   ENV=local
+   
+   # Telegram Configuration
    TELEGRAM_BOT_TOKEN=your_bot_token_here
    TELEGRAM_GROUP_ID=your_group_id_here
+   
+   # Webhook Security
    WEBHOOK_SECRET=your_webhook_secret_here
+   
+   # Sentry Configuration (Optional)
+   SENTRY_ENABLED=false
+   SENTRY_DSN=your_sentry_dsn_here
+   SENTRY_ENVIRONMENT=local
    ```
 
 4. **Run the application**
@@ -94,12 +105,15 @@ The API will be available at `http://localhost:8000`
 
 ### Environment Variables
 
-| Variable | Description | Required |
-|----------|-------------|----------|
-| `TELEGRAM_BOT_TOKEN` | Your Telegram bot token | Yes |
-| `TELEGRAM_GROUP_ID` | Target Telegram group ID | Yes |
-| `WEBHOOK_SECRET` | Secret for webhook authentication | Yes |
-| `SENTRY_DSN` | Sentry DSN for error tracking | No |
+| Variable | Description | Required | Default |
+|----------|-------------|----------|---------|
+| `ENV` | Environment (local, development, test, production) | Yes | `local` |
+| `TELEGRAM_BOT_TOKEN` | Your Telegram bot token | Yes | - |
+| `TELEGRAM_GROUP_ID` | Target Telegram group ID | Yes | - |
+| `WEBHOOK_SECRET` | Secret for webhook authentication | Yes | - |
+| `SENTRY_ENABLED` | Enable Sentry error tracking | No | `false` |
+| `SENTRY_DSN` | Sentry DSN for error tracking | No | - |
+| `SENTRY_ENVIRONMENT` | Environment name for Sentry | No | `local` |
 
 ### Telegram Setup
 
