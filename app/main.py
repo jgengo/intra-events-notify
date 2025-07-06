@@ -18,7 +18,10 @@ async def create_routers(config: Config) -> list[APIRouter]:
 
     return [
         create_health_router(),
-        create_webhook_router(telegram_client),
+        create_webhook_router(
+            config=config,
+            telegram_client=telegram_client,
+        ),
     ]
 
 
@@ -31,22 +34,17 @@ def create_api(config: Config, do_enable_lifespan: bool = True) -> FastAPI:
         yield
 
     api = FastAPI(
-        title="Intra Events Telegram", lifespan=lifespan if do_enable_lifespan else None
+        title="Intra Events Telegram",
+        lifespan=lifespan if do_enable_lifespan else None,
     )
 
     @api.exception_handler(ValidationError)
-    async def exception_handler_validation_error(
-        _: Request, exc: ValidationError
-    ) -> JSONResponse:
-        return JSONResponse(
-            status_code=HTTPStatus.BAD_REQUEST, content={"details": str(exc)}
-        )
+    async def exception_handler_validation_error(_: Request, exc: ValidationError) -> JSONResponse:
+        return JSONResponse(status_code=HTTPStatus.BAD_REQUEST, content={"details": str(exc)})
 
     @api.exception_handler(HTTPException)
     async def http_exception_handler(_: Request, exc: HTTPException) -> JSONResponse:
-        return JSONResponse(
-            status_code=exc.status_code, content={"message": exc.detail}
-        )
+        return JSONResponse(status_code=exc.status_code, content={"message": exc.detail})
 
     return api
 

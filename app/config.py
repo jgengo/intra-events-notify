@@ -31,6 +31,4 @@ class Config(BaseSettings):
     def env_is_local(self) -> bool:
         return self.env == EnvEnum.LOCAL
 
-    model_config = SettingsConfigDict(
-        env_file=".env", env_file_encoding="utf-8", extra="ignore"
-    )
+    model_config = SettingsConfigDict(env_file=".env", env_file_encoding="utf-8", extra="ignore")
