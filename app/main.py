@@ -6,6 +6,7 @@ from fastapi import APIRouter, FastAPI, HTTPException, Request
 from fastapi.responses import JSONResponse
 from pydantic import ValidationError
 
+from app.config import Config
 from app.health.api import create_health_router
 
 
@@ -16,7 +17,7 @@ async def create_routers() -> list[APIRouter]:
     ]
 
 
-def create_api(do_enable_lifespan: bool = True) -> FastAPI:
+def create_api(config: Config, do_enable_lifespan: bool = True) -> FastAPI:
     @asynccontextmanager
     async def lifespan(_api: FastAPI) -> AsyncIterator[None]:
         for router in await create_routers():
@@ -46,4 +47,4 @@ def create_api(do_enable_lifespan: bool = True) -> FastAPI:
 
 
 if __name__ in {"app.main", "main"}:
-    app = create_api()
+    app = create_api(config=Config())
