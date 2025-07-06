@@ -33,8 +33,8 @@ def create_webhook_router(config: Config, telegram_client: TelegramClient):
                 logger.info("Ignoring webhook for event: %s", event)
                 return {"status": "ignored", "message": f"Event {event} not supported"}
 
-            logger.info("Processing webhook - Delivery: %s, Model: %s, Event: %s", delivery_id, model, event)
-            logger.info("New webhook received: %s", event_data)
+            logger.warning("Processing webhook - Delivery: %s, Model: %s, Event: %s", delivery_id, model, event)
+            logger.warning("New webhook received: %s", event_data)
 
             await telegram_client.send_event_notification(event_data)
 

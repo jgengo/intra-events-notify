@@ -13,7 +13,6 @@ from app.webhooks.api import create_webhook_router
 
 
 async def create_routers(config: Config) -> list[APIRouter]:
-
     telegram_client = TelegramClient(config=config)
 
     return [
