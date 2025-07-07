@@ -1,4 +1,3 @@
-import asyncio
 import logging
 from http import HTTPStatus
 
@@ -37,14 +36,22 @@ def create_webhook_router(config: Config, telegram_client: TelegramClient) -> AP
                 logger.info("Ignoring webhook for model: %s", model)
                 raise HTTPException(status_code=HTTPStatus.BAD_REQUEST)
 
-            if event not in ["create"]:
+            if event not in ["create", "destroy"]:
                 logger.info("Ignoring webhook for event: %s", event)
                 raise HTTPException(status_code=HTTPStatus.BAD_REQUEST)
 
-            logger.warning("Processing webhook - Delivery: %s, Model: %s, Event: %s", delivery_id, model, event)
+            logger.warning(
+                "Processing webhook - Delivery: %s, Model: %s, Event: %s",
+                delivery_id,
+                model,
+                event,
+            )
             logger.warning("New webhook received: %s", event_data)
 
-            await telegram_client.send_event_notification(event_data)
+            if event == "create":
+                await telegram_client.send_event_notification(event_data)
+            elif event == "destroy":
+                await telegram_client.send_event_deletion_notification(event_data)
 
             return EventResponseV1(status="success", message="Event processed successfully")
 

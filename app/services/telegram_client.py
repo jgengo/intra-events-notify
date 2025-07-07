@@ -103,6 +103,10 @@ class TelegramClient:
 
         return await self.send_message(message, parse_mode="HTML")
 
+    async def send_event_deletion_notification(self, event: EventRequestV1) -> bool:
+        message = f"Sadly, the event <b>{event.name}</b> has been deleted from the intranet"
+        return await self.send_message(message, parse_mode="HTML")
+
     async def test_connection(self) -> bool:
         try:
             bot_info = await self.bot.get_me()
