@@ -18,7 +18,7 @@
 A FastAPI application that receives webhooks from the 42 intranet and publishes events to a Telegram group, keeping students updated about new events in real-time.
 
 <div align="center">
- <img src='.github/docs/screenshot.png' alt="herbarium's logo" width="400px" /><br />
+ <img src='.github/docs/screenshot.png' alt="project's screenshot" width="400px" /><br />
 </div><br />
 
 ## Purpose
@@ -65,7 +65,7 @@ The application consists of:
 
 3. **Set up environment variables**
    ```bash
-   cp .env.example .env
+   cp .env.sample .env
    ```
    
    Edit `.env` with your configuration:
@@ -177,18 +177,7 @@ app/
 
 ### Docker (Recommended)
 
-```dockerfile
-FROM python:3.12-slim
-
-WORKDIR /app
-COPY . .
-
-RUN pip install uv
-RUN uv sync --frozen
-
-EXPOSE 8000
-CMD ["uv", "run", "uvicorn", "app.main:app", "--host", "0.0.0.0", "--port", "8000"]
-```
+-- TODO
 
 ### Environment Setup
 
