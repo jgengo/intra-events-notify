@@ -25,9 +25,6 @@ read -r -d '' PAYLOAD <<'JSON'
 }
 JSON
 
-echo "Sending webhook to: $WEBHOOK_URL"
-echo "Delivery ID: $DELIVERY_ID"
-
 curl -sS -X POST "$WEBHOOK_URL" \
   -H "Content-Type: application/json" \
   -H "X-Secret: ${WEBHOOK_SECRET}" \
