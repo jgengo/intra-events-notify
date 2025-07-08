@@ -1,5 +1,3 @@
-"""Webhook router and request processing."""
-
 import logging
 from enum import Enum
 from http import HTTPStatus
@@ -8,30 +6,18 @@ from fastapi import APIRouter, HTTPException, Request
 
 from app.config import Config
 from app.services.telegram_client import TelegramClient
-from app.webhooks.api_formats import EventRequestV1, EventResponseV1
+from app.webhooks.api_formats import EventRequestV1, EventResponseV1, WebhookEvent
 
 logger = logging.getLogger(__name__)
 
 
-class WebhookEvent(str, Enum):
-    """Supported webhook event actions."""
-
-    CREATE = "create"
-    DESTROY = "destroy"
-
-
-VALID_MODEL = "event"
-
-
 def _parse_headers(request: Request, config: Config) -> tuple[WebhookEvent, str]:
-    """Validate and extract relevant headers from the webhook request."""
-
     secret = request.headers.get("X-Secret")
     if secret != config.webhook_secret:
         raise HTTPException(status_code=HTTPStatus.UNAUTHORIZED)
 
     model = request.headers.get("X-Model")
-    if model != VALID_MODEL:
+    if model != "event":
         logger.info("Ignoring webhook for model: %s", model)
         raise HTTPException(status_code=HTTPStatus.BAD_REQUEST)
 
@@ -48,8 +34,6 @@ def _parse_headers(request: Request, config: Config) -> tuple[WebhookEvent, str]
 
 
 def create_webhook_router(config: Config, telegram_client: TelegramClient) -> APIRouter:
-    """Return a router handling event webhooks."""
-
     router = APIRouter()
 
     @router.post(
@@ -62,8 +46,6 @@ def create_webhook_router(config: Config, telegram_client: TelegramClient) -> AP
         },
     )
     async def process_event(request: Request, event_data: EventRequestV1) -> EventResponseV1:
-        """Handle event webhook and forward notification to Telegram."""
-
         try:
             event, delivery_id = _parse_headers(request, config)
 
