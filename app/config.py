@@ -20,7 +20,8 @@ class Config(BaseSettings):
     telegram_bot_token: str
     telegram_group_id: str
 
-    webhook_secret: str
+    webhook_event_secret: str
+    webhook_exam_secret: str
 
     def env_is_prod(self) -> bool:
         return self.env == EnvEnum.PRODUCTION
