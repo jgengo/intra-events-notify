@@ -28,3 +28,34 @@ class EventRequestV1(BaseModel):
 class EventResponseV1(BaseModel):
     status: Literal["success"] = "success"
     message: Literal["Event processed successfully"] = "Event processed successfully"
+
+
+class ExamProject(BaseModel):
+    """Information about a project available during an exam."""
+
+    name: str
+    id: int
+    slug: str
+    url: str
+
+
+class ExamRequestV1(BaseModel):
+    """Payload sent by the webhook when an exam is created or deleted."""
+
+    id: int
+    begin_at: str
+    end_at: str
+    location: str | None = None
+    ip_range: str | None = None
+    max_people: int | None = None
+    visible: bool | None = None
+    name: str
+    campus_id: int
+    created_at: str
+    updated_at: str
+    projects: list[ExamProject] | None = None
+
+
+class ExamResponseV1(BaseModel):
+    status: Literal["success"] = "success"
+    message: Literal["Exam processed successfully"] = "Exam processed successfully"

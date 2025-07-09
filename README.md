@@ -26,6 +26,7 @@ A FastAPI application that receives webhooks from the 42 intranet and publishes 
 This application serves as a bridge between the 42 intranet system and Telegram, automatically notifying students about:
 - New events created
 - Event cancellations
+- Upcoming exam sessions
 
 ## Architecture
 
@@ -108,7 +109,14 @@ sh scripts/fake_destroy_webhook.sh
 
 This script posts a sample event deletion payload to `http://localhost:8000/webhooks/events` to test the delete event functionality.
 
-Both scripts use the same authentication mechanism and endpoint, but with different event types to simulate real intranet webhook behavior.
+#### Test Exam Creation
+```bash
+sh scripts/fake_create_exam_webhook.sh
+```
+
+This script posts a sample exam creation payload to `http://localhost:8000/webhooks/exams`.
+
+All scripts use the same authentication mechanism and endpoint, but with different event types to simulate real intranet webhook behavior.
 
 ## API Endpoints
 
@@ -117,6 +125,7 @@ Both scripts use the same authentication mechanism and endpoint, but with differ
 
 ### Webhooks
 - `POST /webhooks/events` - Receive event notifications from intranet
+- `POST /webhooks/exams` - Receive exam notifications from intranet
 
 ### API Documentation
 - `GET /docs` - Interactive API documentation (Swagger UI)

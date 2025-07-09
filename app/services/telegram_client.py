@@ -7,7 +7,7 @@ from telegram import Bot
 from telegram.error import TelegramError
 
 from app.config import Config
-from app.webhooks.api_formats import EventRequestV1
+from app.webhooks.api_formats import EventRequestV1, ExamRequestV1
 
 logger = logging.getLogger(__name__)
 
@@ -100,6 +100,22 @@ class TelegramClient:
             message += f"\n_______________________\n\n<code>{escaped_description}</code>"
 
         message += f"\n_______________________\n&gt;&gt;&gt; <a href='https://profile.intra.42.fr/events/{event.id}'>Register</a> &lt;&lt;&lt;"
+
+        return await self.send_message(message, parse_mode="HTML")
+
+    async def send_exam_notification(self, exam: ExamRequestV1) -> bool:
+        """Send a Telegram notification about an exam."""
+
+        message = f"<b>{exam.name}</b>\n_______________________"
+
+        if exam.begin_at and exam.end_at:
+            message += f"\n\n📅    {self._format_event_dates(exam.begin_at, exam.end_at)}"
+
+        if exam.location:
+            message += f"\n📍    {exam.location}"
+
+        if exam.max_people:
+            message += f"\n👥    Max <b>{exam.max_people} people</b>"
 
         return await self.send_message(message, parse_mode="HTML")
 
