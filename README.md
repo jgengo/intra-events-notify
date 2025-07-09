@@ -26,7 +26,7 @@ A FastAPI application that receives webhooks from the 42 intranet and publishes 
 This application serves as a bridge between the 42 intranet system and Telegram, automatically notifying students about:
 - New events created
 - Event cancellations
-- Upcoming exam sessions
+- New exam sessions created
 
 ## Architecture
 

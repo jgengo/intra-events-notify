@@ -3,7 +3,7 @@
 # This is useful for testing the webhook endpoint without creating real events.
 
 WEBHOOK_URL="${WEBHOOK_URL:-http://localhost:8000/webhooks/events}"
-WEBHOOK_SECRET="${WEBHOOK_SECRET:-FAKE-WEBHOOK-SECRET}"
+WEBHOOK_EVENT_SECRET="${WEBHOOK_EVENT_SECRET:-FAKE-EVENT-SECRET}"
 
 DELIVERY_ID="$(date +%s)"
 
@@ -27,7 +27,7 @@ JSON
 
 curl -sS -X POST "$WEBHOOK_URL" \
   -H "Content-Type: application/json" \
-  -H "X-Secret: ${WEBHOOK_SECRET}" \
+  -H "X-Secret: ${WEBHOOK_EVENT_SECRET}" \
   -H "X-Model: event" \
   -H "X-Event: destroy" \
   -H "X-Delivery: ${DELIVERY_ID}" \

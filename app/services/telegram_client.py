@@ -1,5 +1,6 @@
 import asyncio
 import logging
+import zoneinfo
 from datetime import datetime, timedelta, timezone
 from typing import List, Optional
 
@@ -20,13 +21,13 @@ class TelegramClient:
 
     def _format_event_dates(self, begin_at: str, end_at: str) -> str:
         try:
-            helsinki_tz = timezone(timedelta(hours=2))
+            tz = zoneinfo.ZoneInfo("Europe/Helsinki")
 
-            begin_dt = datetime.strptime(begin_at, "%Y-%m-%d %H:%M:%S UTC")
-            end_dt = datetime.strptime(end_at, "%Y-%m-%d %H:%M:%S UTC")
+            begin_dt = datetime.strptime(begin_at, "%Y-%m-%d %H:%M:%S UTC").replace(tzinfo=timezone.utc)
+            end_dt = datetime.strptime(end_at, "%Y-%m-%d %H:%M:%S UTC").replace(tzinfo=timezone.utc)
 
-            begin_helsinki = begin_dt.astimezone(helsinki_tz)
-            end_helsinki = end_dt.astimezone(helsinki_tz)
+            begin_helsinki = begin_dt.astimezone(tz)
+            end_helsinki = end_dt.astimezone(tz)
 
             duration = end_helsinki - begin_helsinki
 
@@ -43,7 +44,8 @@ class TelegramClient:
             else:
                 duration_str = f"{minutes}m"
 
-            return f"{date_str} at {time_str} ({duration_str})"
+            result = f"{date_str} at {time_str} ({duration_str})"
+            return result
         except Exception as e:
             logger.error(f"Error formatting dates: {e}")
             return f"{begin_at} - {end_at}"
@@ -104,18 +106,21 @@ class TelegramClient:
         return await self.send_message(message, parse_mode="HTML")
 
     async def send_exam_notification(self, exam: ExamRequestV1) -> bool:
-        """Send a Telegram notification about an exam."""
-
-        message = f"<b>{exam.name}</b>\n_______________________"
+        message = f"🚨  <b>EXAM ALERT</b>  🚨\n"
+        message += f"═════════"
 
         if exam.begin_at and exam.end_at:
-            message += f"\n\n📅    {self._format_event_dates(exam.begin_at, exam.end_at)}"
+            message += f"\n\n⏰  {self._format_event_dates(exam.begin_at, exam.end_at)}"
 
         if exam.location:
-            message += f"\n📍    {exam.location}"
+            message += f"\n📍  {exam.location}"
 
         if exam.max_people:
-            message += f"\n👥    Max <b>{exam.max_people} people</b>"
+            message += f"\n👥  Max {exam.max_people} people"
+
+        message += f"\n\n═════════"
+        message += f"\n&gt;&gt;&gt; <a href='https://profile.intra.42.fr/exams/{exam.id}'>Register</a> &lt;&lt;&lt"
+        message += f"\n🎯 <b>Good luck!</b> 🎯"
 
         return await self.send_message(message, parse_mode="HTML")
 

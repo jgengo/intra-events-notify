@@ -5,20 +5,14 @@ from fastapi import APIRouter, HTTPException, Request
 
 from app.config import Config
 from app.services.telegram_client import TelegramClient
-from app.webhooks.api_formats import (
-    EventRequestV1,
-    EventResponseV1,
-    ExamRequestV1,
-    ExamResponseV1,
-    WebhookEvent,
-)
+from app.webhooks.api_formats import EventRequestV1, EventResponseV1, ExamRequestV1, ExamResponseV1, WebhookEvent
 
 logger = logging.getLogger(__name__)
 
 
 def _parse_event_headers(request: Request, config: Config) -> tuple[WebhookEvent, str]:
     secret = request.headers.get("X-Secret")
-    if secret != config.webhook_secret:
+    if secret != config.webhook_event_secret:
         raise HTTPException(status_code=HTTPStatus.UNAUTHORIZED)
 
     model = request.headers.get("X-Model")
@@ -39,10 +33,8 @@ def _parse_event_headers(request: Request, config: Config) -> tuple[WebhookEvent
 
 
 def _parse_exam_headers(request: Request, config: Config) -> tuple[WebhookEvent, str]:
-    """Validate headers for exam webhooks."""
-
     secret = request.headers.get("X-Secret")
-    if secret != config.webhook_secret:
+    if secret != config.webhook_exam_secret:
         raise HTTPException(status_code=HTTPStatus.UNAUTHORIZED)
 
     model = request.headers.get("X-Model")
