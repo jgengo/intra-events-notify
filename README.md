@@ -203,7 +203,39 @@ app/
 
 ### Docker (Recommended)
 
--- TODO
+1. **Build the Docker image**
+   ```bash
+   docker build -t intra-events-notify .
+   ```
+
+2. **Run with environment variables**
+   ```bash
+   docker run -d \
+     --name intra-events-bot \
+     -p 8000:8000 \
+     -e TELEGRAM_BOT_TOKEN=your_bot_token_here \
+     -e TELEGRAM_GROUP_ID=your_group_id_here \
+     -e WEBHOOK_EVENT_SECRET=your_event_webhook_secret_here \
+     -e WEBHOOK_EXAM_SECRET=your_exam_webhook_secret_here \
+     -e SENTRY_ENABLED=false \
+     -e SENTRY_DSN=abc \
+     -e SENTRY_ENVIRONMENT=production \
+     -e TZ=Europe/Helsinki \
+     -e ENV=production \
+     intra-events-notify
+   ```
+
+3. **View logs**
+   ```bash
+   # Follow logs in real-time
+   docker logs -f intra-events-bot
+   ```
+
+4. **Stop the container**
+   ```bash
+   docker stop intra-events-bot
+   docker rm intra-events-bot
+   ```
 
 ### Environment Setup
 
