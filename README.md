@@ -70,13 +70,15 @@ The application consists of:
    ```env
    # Environment
    ENV=local
-   
-   # Telegram Configuration
-   TELEGRAM_BOT_TOKEN=your_bot_token_here
-   TELEGRAM_GROUP_ID=your_group_id_here
-   
-   # Webhook Security
-   WEBHOOK_SECRET=your_webhook_secret_here
+
+
+   TELEGRAM_BOT_TOKEN="FAKE-TELEGRAM-TOKEN"
+   TELEGRAM_GROUP_ID="FAKE-TELEGRAM-GROUP-ID"
+
+   WEBHOOK_EXAM_SECRET="FAKE-EXAM-SECRET"
+   WEBHOOK_EVENT_SECRET="FAKE-EVENT-SECRET"
+
+   TZ="Europe/Helsinki"
    ```
 
 4. **Run the application**
