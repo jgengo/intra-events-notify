@@ -10,44 +10,26 @@ from app.webhooks.api_formats import EventRequestV1, EventResponseV1, ExamReques
 logger = logging.getLogger(__name__)
 
 
-def _parse_event_headers(request: Request, config: Config) -> tuple[WebhookEvent, str]:
+def _parse_webhook_headers(request: Request, expected_secret: str, expected_model: str) -> tuple[WebhookEvent, str]:
     secret = request.headers.get("X-Secret")
-    if secret != config.webhook_event_secret:
-        raise HTTPException(status_code=HTTPStatus.UNAUTHORIZED)
+    if not secret or secret != expected_secret:
+        logger.warning("Unauthorized webhook request: invalid secret")
+        raise HTTPException(status_code=HTTPStatus.UNAUTHORIZED, detail="Invalid or missing secret header")
 
     model = request.headers.get("X-Model")
-    if model != "event":
+    if model != expected_model:
         logger.info("Ignoring webhook for model: %s", model)
-        raise HTTPException(status_code=HTTPStatus.BAD_REQUEST)
+        raise HTTPException(status_code=HTTPStatus.BAD_REQUEST, detail=f"Unsupported model: {model}")
 
-    raw_event = request.headers.get("X-Event") or ""
+    raw_event = request.headers.get("X-Event", "")
     try:
         event = WebhookEvent(raw_event)
     except ValueError:
         logger.info("Ignoring webhook for event: %s", raw_event)
-        raise HTTPException(status_code=HTTPStatus.BAD_REQUEST)
-
-    delivery_id = request.headers.get("X-Delivery", "N/A")
-
-    return event, delivery_id
-
-
-def _parse_exam_headers(request: Request, config: Config) -> tuple[WebhookEvent, str]:
-    secret = request.headers.get("X-Secret")
-    if secret != config.webhook_exam_secret:
-        raise HTTPException(status_code=HTTPStatus.UNAUTHORIZED)
-
-    model = request.headers.get("X-Model")
-    if model != "exam":
-        logger.info("Ignoring webhook for model: %s", model)
-        raise HTTPException(status_code=HTTPStatus.BAD_REQUEST)
-
-    raw_event = request.headers.get("X-Event") or ""
-    try:
-        event = WebhookEvent(raw_event)
-    except ValueError:
-        logger.info("Ignoring webhook for event: %s", raw_event)
-        raise HTTPException(status_code=HTTPStatus.BAD_REQUEST)
+        raise HTTPException(
+            status_code=HTTPStatus.BAD_REQUEST,
+            detail=f"Unsupported event type: {raw_event}",
+        )
 
     delivery_id = request.headers.get("X-Delivery", "N/A")
 
@@ -68,7 +50,7 @@ def create_webhook_router(config: Config, telegram_client: TelegramClient) -> AP
     )
     async def process_event(request: Request, event_data: EventRequestV1) -> EventResponseV1:
         try:
-            event, delivery_id = _parse_event_headers(request, config)
+            event, delivery_id = _parse_webhook_headers(request, config.webhook_event_secret, "event")
 
             logger.warning("Processing webhook - Delivery: %s, Event: %s", delivery_id, event)
             logger.warning("Webhook payload: %s", event_data)
@@ -100,7 +82,7 @@ def create_webhook_router(config: Config, telegram_client: TelegramClient) -> AP
     )
     async def process_exam(request: Request, exam_data: ExamRequestV1) -> ExamResponseV1:
         try:
-            event, delivery_id = _parse_exam_headers(request, config)
+            event, delivery_id = _parse_webhook_headers(request, config.webhook_exam_secret, "exam")
 
             logger.warning("Processing exam webhook - Delivery: %s, Event: %s", delivery_id, event)
             logger.warning("Webhook payload: %s", exam_data)
