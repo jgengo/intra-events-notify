@@ -146,17 +146,71 @@ All scripts use the same authentication mechanism and endpoint, but with differe
 
 ## Webhook Format
 
-The 42 intranet should send POST requests to `/webhooks/events` with this format:
+The 42 intranet should send POST requests to `/webhooks/events` and `/webhooks/exams` with the following headers and format:
 
--- TODO
+### Headers
+- `Content-Type: application/json`
+- `X-Secret: {webhook_secret}` - Authentication secret
+- `X-Model: {model_type}` - Either "event" or "exam"
+- `X-Event: {event_type}` - Either "create" or "destroy"
+- `X-Delivery: {delivery_id}` - Unique delivery identifier
+
+### Event Webhook Payload (`/webhooks/events`)
+```json
+{
+  "id": 33480,
+  "begin_at": "2025-07-09 18:00:00 UTC",
+  "end_at": "2025-07-09 19:00:00 UTC",
+  "name": "🩵 Running just a test",
+  "description": "I'm sorry for the ping, just running one last test.",
+  "location": "Titus' Boiler Room",
+  "kind": "conference",
+  "max_people": 1,
+  "prohibition_of_cancellation": null,
+  "campus_ids": [13],
+  "cursus_ids": [1],
+  "created_at": "2025-07-09 17:36:23 UTC",
+  "updated_at": "2025-07-09 17:36:23 UTC"
+}
+```
+
+### Exam Webhook Payload (`/webhooks/exams`)
+```json
+{
+  "id": 24484,
+  "begin_at": "2025-07-09 18:00:00 UTC",
+  "end_at": "2025-07-09 19:00:00 UTC",
+  "location": "Jordane's home",
+  "ip_range": "10.13.1.1/16",
+  "max_people": 1,
+  "visible": false,
+  "name": "Exam",
+  "campus_id": 13,
+  "created_at": "2025-07-09 17:24:14 UTC",
+  "updated_at": "2025-07-09 17:24:14 UTC",
+  "projects": [
+    {
+      "name": "Exam Rank 02",
+      "id": 1320,
+      "slug": "exam-rank-02",
+      "url": "https://projects.intra.42.fr/exam-rank-02/mine"
+    }
+  ]
+}
+```
 
 ### Event Types
 
--- TODO 
-<!-- - `created` - New event
-- `updated` - Event modified
-- `deleted` - Event cancelled
-- `reminder` - Event reminder -->
+The webhook system supports the following event types:
+
+#### Event Webhooks (`/webhooks/events`)
+- `create` - New event created
+- `destroy` - Event cancelled/deleted
+
+#### Exam Webhooks (`/webhooks/exams`)
+- `create` - New exam session created
+<!-- - `destroy` - Exam session cancelled/deleted  -->
+
 
 ## Development
 
