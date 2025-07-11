@@ -41,7 +41,6 @@ app/
 - Always handle exceptions gracefully
 - Log errors with appropriate context
 - Return meaningful error messages to clients
-- Use Sentry for error tracking in production
 
 ### Security
 - Validate all incoming webhook data
@@ -86,7 +85,6 @@ Required:
 - `WEBHOOK_SECRET`: Secret for webhook auth
 
 Optional:
-- `SENTRY_DSN`: Error tracking
 - `LOG_LEVEL`: Logging verbosity
 
 ### Configuration Management

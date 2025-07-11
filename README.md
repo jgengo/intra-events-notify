@@ -77,11 +77,6 @@ The application consists of:
    
    # Webhook Security
    WEBHOOK_SECRET=your_webhook_secret_here
-   
-   # Sentry Configuration (Optional)
-   SENTRY_ENABLED=false
-   SENTRY_DSN=your_sentry_dsn_here
-   SENTRY_ENVIRONMENT=local
    ```
 
 4. **Run the application**
@@ -140,10 +135,8 @@ All scripts use the same authentication mechanism and endpoint, but with differe
 | `ENV` | Environment (local, development, test, production) | Yes | `local` |
 | `TELEGRAM_BOT_TOKEN` | Your Telegram bot token | Yes | - |
 | `TELEGRAM_GROUP_ID` | Target Telegram group ID | Yes | - |
-| `WEBHOOK_SECRET` | Secret for webhook authentication | Yes | - |
-| `SENTRY_ENABLED` | Enable Sentry error tracking | No | `false` |
-| `SENTRY_DSN` | Sentry DSN for error tracking | No | - |
-| `SENTRY_ENVIRONMENT` | Environment name for Sentry | No | `local` |
+| `WEBHOOK_EVENT_SECRET` | Secret for events' webhooks  | Yes | - |
+| `WEBHOOK_EXAM_SECRET` | Secret for exam's webhooks | Yes | - |
 
 ### Telegram Setup
 
@@ -217,9 +210,6 @@ app/
      -e TELEGRAM_GROUP_ID=your_group_id_here \
      -e WEBHOOK_EVENT_SECRET=your_event_webhook_secret_here \
      -e WEBHOOK_EXAM_SECRET=your_exam_webhook_secret_here \
-     -e SENTRY_ENABLED=false \
-     -e SENTRY_DSN=abc \
-     -e SENTRY_ENVIRONMENT=production \
      -e TZ=Europe/Helsinki \
      -e ENV=production \
      intra-events-notify

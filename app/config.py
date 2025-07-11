@@ -13,10 +13,6 @@ class EnvEnum(str, Enum):
 class Config(BaseSettings):
     env: EnvEnum
 
-    sentry_enabled: bool
-    sentry_dsn: str
-    sentry_environment: str
-
     telegram_bot_token: str
     telegram_group_id: str
 
