@@ -98,21 +98,21 @@ The API will be available at `http://localhost:8000`
 
 With the server running, you can test webhook functionality locally using the provided scripts:
 
-#### Test Event Creation
+#### Test event creation
 ```bash
 sh scripts/fake_create_webhook.sh
 ```
 
 This script posts a sample event creation payload to `http://localhost:8000/webhooks/events` using the `WEBHOOK_SECRET` from your `.env` file.
 
-#### Test Event Deletion
+#### Test event deletion
 ```bash
 sh scripts/fake_destroy_webhook.sh
 ```
 
 This script posts a sample event deletion payload to `http://localhost:8000/webhooks/events` to test the delete event functionality.
 
-#### Test Exam Creation
+#### Test exam creation
 ```bash
 sh scripts/fake_create_exam_webhook.sh
 ```
@@ -123,7 +123,7 @@ All scripts use the same authentication mechanism and endpoint, but with differe
 
 ## API Endpoints
 
-### Health Check
+### Healthcheck
 - `GET /health` - Check if the service is running
 
 ### Webhooks
