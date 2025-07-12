@@ -17,6 +17,8 @@
 
 A FastAPI application that receives webhooks from the 42 intranet and publishes events to a Telegram group, keeping students updated about new events in real-time.
 
+<br>
+
 <div align="center">
  <img src='.github/docs/screenshot.png' alt="project's screenshot" width="400px" /><br />
 </div><br />
@@ -30,15 +32,17 @@ This application serves as a bridge between the 42 intranet system and Telegram,
 
 ## Architecture
 
-```
-42 Intra → Webhook → FastAPI → Telegram Bot → Student Group
-```
+<div align="center">
+ <img src='.github/docs/architecture.png' alt="project's architecture" width="400px" /><br />
+</div><br />
 
 The application consists of:
 - **Webhook endpoints**: Receive event notifications from the 42 intranet
 - **Telegram client**: Publish formatted messages to your Telegram group
 - **Health monitoring**: Ensure the service is running properly
 - **Error handling**: Graceful handling of webhook failures
+
+<br>
 
 ## Quick Start
 
@@ -148,18 +152,27 @@ All scripts use the same authentication mechanism and endpoint, but with differe
 2. **Add the bot to your group** and make it an admin
 3. **Get the group ID** by sending a message and checking `https://api.telegram.org/bot<BOT_TOKEN>/getUpdates`
 
+
+<br>
+
 ## Webhook Format
 
 The 42 intranet should send POST requests to `/webhooks/events` and `/webhooks/exams` with the following headers and format:
 
 ### Headers
-- `Content-Type: application/json`
-- `X-Secret: {webhook_secret}` - Authentication secret
-- `X-Model: {model_type}` - Either "event" or "exam"
-- `X-Event: {event_type}` - Either "create" or "destroy"
-- `X-Delivery: {delivery_id}` - Unique delivery identifier
 
-### Event Webhook Payload (`/webhooks/events`)
+| Header | Value | Description |
+|--------|-------|-------------|
+| `Content-Type` | `application/json` | Request content type |
+| `X-Secret` | `{webhook_secret}` | Authentication secret |
+| `X-Model` | `{model_type}` | Either "event" or "exam" |
+| `X-Event` | `{event_type}` | Either "create" or "destroy" |
+| `X-Delivery` | `{delivery_id}` | Unique delivery identifier |
+
+### Event webhook payload
+
+**URI:** `/webhooks/events`
+
 ```json
 {
   "id": 33480,
@@ -178,7 +191,10 @@ The 42 intranet should send POST requests to `/webhooks/events` and `/webhooks/e
 }
 ```
 
-### Exam Webhook Payload (`/webhooks/exams`)
+### Exam webhook payload
+
+**URI:** `/webhooks/exams`
+
 ```json
 {
   "id": 24484,
@@ -215,6 +231,7 @@ The webhook system supports the following event types:
 - `create` - New exam session created
 <!-- - `destroy` - Exam session cancelled/deleted  -->
 
+<br>
 
 ## Development
 
@@ -249,6 +266,8 @@ app/
     ├── api.py
     └── api_formats.py
 ```
+
+<br>
 
 ## Deployment
 
@@ -291,21 +310,21 @@ app/
 2. Configure your webhook URL in the 42 intranet
 3. Ensure your Telegram bot has proper permissions
 
+<br>
+
 ## Security
 
-- Webhook endpoints should be protected with authentication
-- Use HTTPS in production
-- Validate all incoming webhook data
-- Rate limit webhook endpoints to prevent abuse
-
+- Protect webhook endpoints with authentication secrets.
+- Always use HTTPS in production environments.
+- Limit access to trusted IP addresses using your NAT, firewall, or web server (such as nginx) configuration.
 
 ## Contributing
 
-1. Fork the repository
-2. Create a feature branch
-3. Make your changes
-4. Run tests and linting
-5. Submit a pull request
+1. Fork this repository to your own GitHub account.
+2. Create a new branch for your feature or fix.
+3. Implement your changes.
+4. Run all tests and code quality checks (linting, formatting, type checking).
+5. Open a pull request describing your changes.
 
 ## License
 
