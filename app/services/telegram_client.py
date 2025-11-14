@@ -86,6 +86,10 @@ class TelegramClient:
         return successful_sends
 
     async def send_event_notification(self, event: EventRequestV1) -> bool:
+        if "test" in event.name.lower():
+            logger.info(f"Skipping event notification with 'test' in name: {event.name}")
+            return False
+
         message = f"<b>{event.name}</b>\n_______________________"
 
         if event.begin_at and event.end_at:
@@ -106,6 +110,10 @@ class TelegramClient:
         return await self.send_message(message, parse_mode="HTML")
 
     async def send_exam_notification(self, exam: ExamRequestV1) -> bool:
+        if "test" in exam.name.lower():
+            logger.info(f"Skipping exam notification with 'test' in name: {exam.name}")
+            return False
+
         message = f"🚨  <b>EXAM ALERT</b>  🚨\n"
         message += f"═════════"
 
